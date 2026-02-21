@@ -5,13 +5,13 @@ Turn your `git diff --staged` into a ready-to-paste AI prompt for commit message
 ## Installation
 
 ```bash
-npm install -g commitprompt
+npm install -g @elvatis_com/commitprompt
 ```
 
 Or use without installing:
 
 ```bash
-npx commitprompt
+npx @elvatis_com/commitprompt
 ```
 
 ## Usage

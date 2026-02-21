@@ -3,9 +3,10 @@
 ## Priority Order
 
 ### 1. npm publish (MEDIUM - human required)
-- Run `npm login` as Emre
-- Run `npm publish` from project root
-- Verify at npmjs.com/package/commitprompt
+- Package name: `@elvatis_com/commitprompt` (scoped, due to conflict with `commit-prompt`)
+- Run `npm login` as Emre (if not already logged in)
+- Run `npm publish --access=public` from project root
+- Verify at npmjs.com/package/@elvatis_com/commitprompt
 - After publish: update STATUS.md
 
 ### 2. --context flag enhancement (LOW)

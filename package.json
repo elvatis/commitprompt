@@ -1,5 +1,5 @@
 {
-  "name": "commitprompt",
+  "name": "@elvatis_com/commitprompt",
   "version": "0.1.0",
   "description": "Turn your git diff into a ready-to-paste AI prompt for commit messages, PR descriptions and changelogs",
   "type": "module",
