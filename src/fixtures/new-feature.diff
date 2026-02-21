@@ -1,0 +1,209 @@
+diff --git a/src/__tests__/integration.test.ts b/src/__tests__/integration.test.ts
+index 92fa034..7877789 100644
+--- a/src/__tests__/integration.test.ts
++++ b/src/__tests__/integration.test.ts
+@@ -1,61 +1,171 @@
+ /**
+- * Integration test: verifies the full pipeline from raw log to prompt output.
+- * This test uses a realistic gh log snippet to validate end-to-end behavior.
++ * Integration tests: full pipeline from raw gh log to prompt output.
++ * Each scenario uses a realistic gh log snippet from a different failure type.
+  */
+ import { extractErrors } from '../error-extractor.js';
+ import { buildPrompt } from '../prompt-builder.js';
+ 
+-const SAMPLE_GH_LOG = `
+-Build\tInstall dependencies\t2026-02-21T10:00:01.000Z npm warn deprecated inflight@1.0.6
+-Build\tInstall dependencies\t2026-02-21T10:00:02.000Z added 42 packages in 3s
++// ---------------------------------------------------------------------------
++// Scenario 1: TypeScript compile error (tsc fails on type mismatch)
++// ---------------------------------------------------------------------------
++const TS_COMPILE_LOG = `
++Build\tInstall dependencies\t2026-02-21T10:00:01.000Z added 42 packages in 3s
+ Build\tRun build\t2026-02-21T10:00:05.000Z ##[group]Run npx tsc
+ Build\tRun build\t2026-02-21T10:00:06.000Z src/parser.ts(42,7): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+ Build\tRun build\t2026-02-21T10:00:06.000Z src/parser.ts(42,7): error TS2345:   Type 'undefined' is not assignable to type 'string'.
+-Build\tRun build\t2026-02-21T10:00:06.000Z ##[endgroup]
+-Build\tRun build\t2026-02-21T10:00:06.000Z ##[error]Process completed with exit code 2.
++Build\tRun build\t2026-02-21T10:00:07.000Z Found 1 error in src/parser.ts(42,7)
++Build\tRun build\t2026-02-21T10:00:07.000Z ##[endgroup]
++Build\tRun build\t2026-02-21T10:00:07.000Z ##[error]Process completed with exit code 2.
+ `.trim();
+ 
+-describe('integration: raw gh log -> prompt', () => {
+-  it('extracts the correct step name from gh log format', () => {
+-    const result = extractErrors(SAMPLE_GH_LOG);
++// ---------------------------------------------------------------------------
++// Scenario 2: npm ERR! missing module (dependency not installed)
++// ---------------------------------------------------------------------------
++const NPM_ERR_LOG = `
++Deploy\tInstall dependencies\t2026-02-21T11:00:01.000Z npm warn deprecated glob@7.2.3
++Deploy\tRun server\t2026-02-21T11:00:10.000Z ##[group]Run node dist/server.js
++Deploy\tRun server\t2026-02-21T11:00:10.000Z node:internal/modules/cjs/loader:1148
++Deploy\tRun server\t2026-02-21T11:00:10.000Z   throw err;
++Deploy\tRun server\t2026-02-21T11:00:10.000Z   ^
++Deploy\tRun server\t2026-02-21T11:00:10.000Z Error: Cannot find module 'express'
++Deploy\tRun server\t2026-02-21T11:00:10.000Z Require stack:
++Deploy\tRun server\t2026-02-21T11:00:10.000Z - /home/runner/work/app/dist/server.js
++Deploy\tRun server\t2026-02-21T11:00:10.000Z npm ERR! code 1
++Deploy\tRun server\t2026-02-21T11:00:10.000Z npm ERR! path /home/runner/work/app
++Deploy\tRun server\t2026-02-21T11:00:10.000Z npm ERR! command failed
++Deploy\tRun server\t2026-02-21T11:00:11.000Z ##[endgroup]
++Deploy\tRun server\t2026-02-21T11:00:11.000Z ##[error]Process completed with exit code 1.
++`.trim();
++
++// ---------------------------------------------------------------------------
++// Scenario 3: Jest test failure (realistic vitest/jest output)
++// ---------------------------------------------------------------------------
++const JEST_FAILURE_LOG = `
++Test\tRun tests\t2026-02-21T12:00:01.000Z ##[group]Run npm test
++Test\tRun tests\t2026-02-21T12:00:03.000Z PASS src/__tests__/utils.test.ts
++Test\tRun tests\t2026-02-21T12:00:04.000Z FAIL src/__tests__/auth.test.ts
++Test\tRun tests\t2026-02-21T12:00:04.000Z   ● auth › login › returns 401 for invalid credentials
++Test\tRun tests\t2026-02-21T12:00:04.000Z     expect(received).toBe(expected)
++Test\tRun tests\t2026-02-21T12:00:04.000Z     Expected: 401
++Test\tRun tests\t2026-02-21T12:00:04.000Z     Received: 200
++Test\tRun tests\t2026-02-21T12:00:04.000Z     at src/__tests__/auth.test.ts:34:5
++Test\tRun tests\t2026-02-21T12:00:04.000Z Test Suites: 1 failed, 1 passed, 2 total
++Test\tRun tests\t2026-02-21T12:00:04.000Z Tests:       1 failed, 12 passed, 13 total
++Test\tRun tests\t2026-02-21T12:00:05.000Z ##[endgroup]
++Test\tRun tests\t2026-02-21T12:00:05.000Z ##[error]Process completed with exit code 1.
++`.trim();
++
++// ---------------------------------------------------------------------------
++// Scenario 1 tests: TypeScript compile error
++// ---------------------------------------------------------------------------
++describe('scenario 1: TypeScript compile error', () => {
++  it('identifies the failing step as the build step', () => {
++    const result = extractErrors(TS_COMPILE_LOG);
+     expect(result.stepName).toBe('Run build');
+   });
+ 
+-  it('extracts TypeScript error lines without gh metadata prefix', () => {
+-    const result = extractErrors(SAMPLE_GH_LOG);
+-    const hasTs = result.allErrors.some((l) =>
+-      l.includes('Process completed with exit code 2')
+-    );
+-    expect(hasTs).toBe(true);
+-    // Must NOT contain raw tab-separated gh prefixes
++  it('strips gh metadata prefix from error lines', () => {
++    const result = extractErrors(TS_COMPILE_LOG);
+     const hasRawPrefix = result.errorLines.some((l) => l.includes('\tRun build\t'));
+     expect(hasRawPrefix).toBe(false);
+   });
+ 
+-  it('extracts file paths from TypeScript errors', () => {
+-    const result = extractErrors(SAMPLE_GH_LOG);
+-    const hasSrcPath = result.filePaths.some((p) => p.includes('src/'));
+-    expect(hasSrcPath).toBe(true);
++  it('extracts the TypeScript error code (TS2345) in the context', () => {
++    const result = extractErrors(TS_COMPILE_LOG);
++    const hasErrorCode = result.errorLines.some((l) => l.includes('TS2345'));
++    expect(hasErrorCode).toBe(true);
+   });
+ 
+-  it('builds a prompt that includes the step name and error context', () => {
+-    const error = extractErrors(SAMPLE_GH_LOG);
++  it('extracts file path from TypeScript error', () => {
++    const result = extractErrors(TS_COMPILE_LOG);
++    expect(result.filePaths.some((p) => p.includes('src/'))).toBe(true);
++  });
++
++  it('builds a complete prompt with TS error context', () => {
++    const error = extractErrors(TS_COMPILE_LOG);
+     const prompt = buildPrompt({
+-      repo: 'homeofe/failprompt',
+-      branch: 'main',
+-      runId: '99999',
+-      includeContext: true,
++      repo: 'homeofe/myapp',
++      branch: 'feat/auth',
++      runId: '11111',
++      includeContext: false,
+       error,
+     });
++    expect(prompt).toContain('## CI Failure');
+     expect(prompt).toContain('Run build');
+-    expect(prompt).toContain('homeofe/failprompt');
+     expect(prompt).toContain('TS2345');
++    expect(prompt).toContain('### Task');
++  });
++});
++
++// ---------------------------------------------------------------------------
++// Scenario 2 tests: npm ERR! missing module
++// ---------------------------------------------------------------------------
++describe('scenario 2: npm ERR! missing module', () => {
++  it('identifies the failing step as the run step', () => {
++    const result = extractErrors(NPM_ERR_LOG);
++    expect(result.stepName).toBe('Run server');
++  });
++
++  it('captures the Cannot find module error', () => {
++    const result = extractErrors(NPM_ERR_LOG);
++    const hasModuleError = result.errorLines.some((l) =>
++      l.includes("Cannot find module 'express'")
++    );
++    expect(hasModuleError).toBe(true);
++  });
++
++  it('does not include raw timestamps in output', () => {
++    const result = extractErrors(NPM_ERR_LOG);
++    const hasTimestamp = result.errorLines.some((l) =>
++      /\d{4}-\d{2}-\d{2}T[\d:.]+Z/.test(l)
++    );
++    expect(hasTimestamp).toBe(false);
+   });
+ 
+-  // This test intentionally fails to demonstrate failprompt against its own CI
+-  it('DEMO FAILURE: this test is intentionally broken to showcase failprompt', () => {
+-    const result = extractErrors(SAMPLE_GH_LOG);
+-    // Wrong assertion on purpose - step is "Run build" not "Install dependencies"
+-    expect(result.stepName).toBe('Install dependencies');
++  it('builds a prompt that is paste-ready for an LLM', () => {
++    const error = extractErrors(NPM_ERR_LOG);
++    const prompt = buildPrompt({
++      repo: 'homeofe/myapp',
++      branch: 'main',
++      runId: '22222',
++      includeContext: false,
++      error,
++    });
++    expect(prompt).toContain('Cannot find module');
++    expect(prompt).toContain('Fix the error above');
++  });
++});
++
++// ---------------------------------------------------------------------------
++// Scenario 3 tests: Jest test failure
++// ---------------------------------------------------------------------------
++describe('scenario 3: Jest test failure', () => {
++  it('identifies the failing step', () => {
++    const result = extractErrors(JEST_FAILURE_LOG);
++    expect(result.stepName).toBe('Run tests');
++  });
++
++  it('captures the assertion failure details', () => {
++    const result = extractErrors(JEST_FAILURE_LOG);
++    const hasAssertion = result.errorLines.some((l) => l.includes('Expected: 401'));
++    expect(hasAssertion).toBe(true);
++  });
++
++  it('extracts file path from jest stack trace', () => {
++    const result = extractErrors(JEST_FAILURE_LOG);
++    expect(result.filePaths.some((p) => p.includes('src/'))).toBe(true);
++  });
++
++  it('full prompt contains the received vs expected values', () => {
++    const error = extractErrors(JEST_FAILURE_LOG);
++    const prompt = buildPrompt({
++      repo: 'homeofe/myapp',
++      branch: 'fix/auth',
++      runId: '33333',
++      includeContext: false,
++      error,
++    });
++    expect(prompt).toContain('Expected: 401');
++    expect(prompt).toContain('Received: 200');
+   });
+ });
