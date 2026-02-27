@@ -1,4 +1,4 @@
-# STATUS.md - commitprompt
+﻿# STATUS.md - commitprompt
 
 Last updated: 2026-02-27
 
@@ -23,7 +23,7 @@ Last updated: 2026-02-27
 - `src/__tests__/diff-parser.test.ts` - parser tests using real fixtures
 - `src/__tests__/prompt-builder.test.ts` - builder tests using real fixtures
 - `src/__tests__/integration.test.ts` - end-to-end tests using real fixtures
-- `src/fixtures/*.diff` - real diffs from github.com/homeofe/failprompt
+- `src/fixtures/*.diff` - real diffs from github.com/elvatis/failprompt
 - `.github/workflows/ci.yml` - GitHub Actions CI
 - `.gitlab-ci.yml` - GitLab CI pipeline
 - `eslint.config.js` - ESLint flat config with typescript-eslint and custom no-em-dash rule

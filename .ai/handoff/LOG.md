@@ -1,4 +1,4 @@
-# LOG.md - commitprompt Build History
+﻿# LOG.md - commitprompt Build History
 
 ## 2026-02-21 - Initial Implementation (AAHP auto)
 
@@ -16,7 +16,7 @@
 - AAHP handoff files
 
 ### Why
-commitprompt is a companion tool to failprompt (github.com/homeofe/failprompt).
+commitprompt is a companion tool to failprompt (github.com/elvatis/failprompt).
 Where failprompt turns CI failure logs into AI prompts, commitprompt turns staged
 git diffs into AI prompts for commit messages, PR descriptions, and changelogs.
 

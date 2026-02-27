@@ -1,10 +1,10 @@
-# DASHBOARD.md - commitprompt Build Health
+﻿# DASHBOARD.md - commitprompt Build Health
 
 | Check         | Status    | Detail                                          |
 | ------------- | --------- | ----------------------------------------------- |
 | TypeScript    | OK        | Strict mode, NodeNext modules, zero errors      |
 | Tests         | 42/42     | diff-parser (14), prompt-builder (12), integration (16) |
-| CI            | Live      | github.com/homeofe/commitprompt/actions         |
+| CI            | Live      | github.com/elvatis/commitprompt/actions         |
 | npm publish   | Pending   | Needs human `npm login`                         |
 | E2E           | Verified  | src/fixtures/e2e-output.txt                     |
 
