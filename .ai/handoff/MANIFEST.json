@@ -5,13 +5,13 @@
     "manifest_only": 100
   },
   "project": "commitprompt",
-  "quick_context": "commitprompt v0.1.0 published on npm. 59/59 tests passing. GitHub Actions and GitLab CI live. --context flag implemented. 1 enhancement task ready.",
+  "quick_context": "commitprompt v0.1.0 published on npm. 59/59 tests passing. GitHub Actions and GitLab CI live. ESLint with typescript-eslint and custom no-em-dash rule configured. All tasks done.",
   "last_session": {
     "agent": "claude-code",
     "duration_minutes": 5,
-    "session_id": "context-flag",
+    "session_id": "eslint-setup",
     "phase": "maintenance",
-    "commit": "46cae37",
+    "commit": "",
     "timestamp": "2026-02-27T14:00:00.000Z"
   },
   "tasks": {
@@ -29,14 +29,15 @@
       "created": "2026-02-28T00:00:00Z",
       "depends_on": [],
       "priority": "low",
-      "completed": "2026-02-27T14:00:00.000Z"
+      "completed": "2026-02-27T13:24:57.112Z"
     },
     "T-002": {
       "title": "ESLint setup with typescript-eslint and no-em-dash rule",
-      "status": "ready",
+      "status": "done",
       "created": "2026-02-28T00:00:00Z",
       "depends_on": [],
-      "priority": "low"
+      "priority": "low",
+      "completed": "2026-02-27T14:00:00.000Z"
     }
   },
   "next_task_id": 4,

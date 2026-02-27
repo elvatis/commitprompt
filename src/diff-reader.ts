@@ -21,9 +21,9 @@ export function readStagedDiff(cwd?: string): string {
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     if (message.includes('not found') || message.includes('not recognized')) {
-      throw new Error('git not found. Please install git and try again.');
+      throw new Error('git not found. Please install git and try again.', { cause: err });
     }
-    throw new Error(`Failed to run git diff --staged: ${message}`);
+    throw new Error(`Failed to run git diff --staged: ${message}`, { cause: err });
   }
 
   if (!raw || raw.trim() === '') {
@@ -47,7 +47,7 @@ export function readDiffFile(path: string): string {
     return content;
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    throw new Error(`Failed to read diff file: ${message}`);
+    throw new Error(`Failed to read diff file: ${message}`, { cause: err });
   }
 }
 

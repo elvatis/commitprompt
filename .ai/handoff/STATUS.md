@@ -7,6 +7,7 @@ Last updated: 2026-02-27
 | Check        | Status    | Notes                                          |
 | ------------ | --------- | ---------------------------------------------- |
 | `tsc`        | (Verified) Clean | Strict mode, NodeNext, zero errors       |
+| `npm run lint` | (Verified) Clean | ESLint + typescript-eslint + no-em-dash rule |
 | `npm test`   | (Verified) 59/59 | 3 suites: diff-parser, prompt-builder, integration |
 | GitHub CI    | (Verified) Live  | `.github/workflows/ci.yml` on main       |
 | GitLab CI    | (Verified) Live  | `.gitlab-ci.yml` at project root          |
@@ -25,6 +26,8 @@ Last updated: 2026-02-27
 - `src/fixtures/*.diff` - real diffs from github.com/homeofe/failprompt
 - `.github/workflows/ci.yml` - GitHub Actions CI
 - `.gitlab-ci.yml` - GitLab CI pipeline
+- `eslint.config.js` - ESLint flat config with typescript-eslint and custom no-em-dash rule
+- `eslint-rules/no-em-dash.js` - Custom ESLint rule disallowing em dash characters
 - `README.md` - installation and usage docs
 
 ## Verified Behaviors
@@ -39,6 +42,4 @@ Last updated: 2026-02-27
 
 ## Known Gaps
 
-| Gap         | Severity | Notes                                 |
-| ----------- | -------- | ------------------------------------- |
-| ESLint      | LOW      | Optional, nice to have                |
+No known gaps. All planned tasks completed.
