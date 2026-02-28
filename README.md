@@ -99,7 +99,7 @@ The diff parser also recognizes both GitHub and GitLab CI file paths (`.github/`
 
 ## AAHP case study
 
-This tool was built using the [AAHP (AI-to-AI Handoff Protocol)](https://github.com/elvatis/AAHP).
+This tool was built using the [AAHP (AI-to-AI Handoff Protocol)](https://github.com/homeofe/AAHP).
 
 Its sibling project [failprompt](https://github.com/elvatis/failprompt) does the same thing for CI failure logs: turn GitHub Actions errors into structured AI prompts for debugging.
 
