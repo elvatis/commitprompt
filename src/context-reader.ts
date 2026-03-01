@@ -10,7 +10,8 @@ import { readFileSync } from 'fs';
  * paragraph (text block between blank lines).
  */
 export function extractReadmeIntro(content: string): string {
-  const lines = content.split('\n');
+  const sanitized = content.replace(/^\uFEFF/, '');
+  const lines = sanitized.split('\n');
   const paragraph: string[] = [];
   let pastTitle = false;
 
