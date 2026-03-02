@@ -69,7 +69,7 @@
     "T-007": {
       "title": "Add --type flag to override change type detection [low]",
       "status": "ready",
-      "priority": "medium",
+      "priority": "low",
       "depends_on": [],
       "created": "2026-03-02T03:48:11.828Z",
       "github_issue": 4,
@@ -78,7 +78,7 @@
     "T-008": {
       "title": "Shell autocomplete [low]",
       "status": "ready",
-      "priority": "medium",
+      "priority": "low",
       "depends_on": [],
       "created": "2026-03-02T03:48:11.828Z",
       "github_issue": 5,
