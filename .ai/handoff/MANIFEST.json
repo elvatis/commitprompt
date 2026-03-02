@@ -38,9 +38,54 @@
       "depends_on": [],
       "priority": "low",
       "completed": "2026-02-27T14:12:58.299Z"
+    },
+    "T-004": {
+      "title": "Add --copy flag for clipboard output [medium]",
+      "status": "ready",
+      "priority": "medium",
+      "depends_on": [],
+      "created": "2026-03-02T03:48:11.827Z",
+      "github_issue": 1,
+      "github_repo": "elvatis/commitprompt"
+    },
+    "T-005": {
+      "title": "Support reading diff from stdin [medium]",
+      "status": "ready",
+      "priority": "medium",
+      "depends_on": [],
+      "created": "2026-03-02T03:48:11.827Z",
+      "github_issue": 2,
+      "github_repo": "elvatis/commitprompt"
+    },
+    "T-006": {
+      "title": "Add --branch flag for branch diff comparison [medium]",
+      "status": "ready",
+      "priority": "medium",
+      "depends_on": [],
+      "created": "2026-03-02T03:48:11.828Z",
+      "github_issue": 3,
+      "github_repo": "elvatis/commitprompt"
+    },
+    "T-007": {
+      "title": "Add --type flag to override change type detection [low]",
+      "status": "ready",
+      "priority": "medium",
+      "depends_on": [],
+      "created": "2026-03-02T03:48:11.828Z",
+      "github_issue": 4,
+      "github_repo": "elvatis/commitprompt"
+    },
+    "T-008": {
+      "title": "Shell autocomplete [low]",
+      "status": "ready",
+      "priority": "medium",
+      "depends_on": [],
+      "created": "2026-03-02T03:48:11.828Z",
+      "github_issue": 5,
+      "github_repo": "elvatis/commitprompt"
     }
   },
-  "next_task_id": 4,
+  "next_task_id": 9,
   "files": {
     "NEXT_ACTIONS.md": {
       "updated": "2026-02-28T00:00:00Z",
