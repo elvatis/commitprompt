@@ -14,6 +14,7 @@ import {
 import { parseDiff } from './diff-parser.js';
 import { buildPrompt, type Mode } from './prompt-builder.js';
 import { readRepoContext } from './context-reader.js';
+import { copyToClipboard } from './clipboard.js';
 
 // Valid commit types (also used for autocomplete)
 const VALID_TYPES = ['feat', 'fix', 'docs', 'refactor', 'test', 'chore', 'ci', 'perf'];
@@ -47,6 +48,10 @@ program
     '--completions <shell>',
     'Print shell completion script for bash or zsh and exit'
   )
+  .option(
+    '-c, --copy',
+    'Copy the generated prompt to the system clipboard instead of (or in addition to) printing it'
+  )
   .parse(process.argv);
 
 const opts = program.opts<{
@@ -57,6 +62,7 @@ const opts = program.opts<{
   type?: string;
   context?: boolean;
   completions?: string;
+  copy?: boolean;
 }>();
 
 // Handle --completions before anything else
@@ -123,7 +129,18 @@ if (opts.type) {
 
 const prompt = buildPrompt(parsed, raw, mode, 120, contextString);
 
-process.stdout.write(prompt + '\n');
+if (opts.copy) {
+  const err = copyToClipboard(prompt);
+  if (err) {
+    // Clipboard failed: print the prompt anyway and warn on stderr
+    process.stderr.write(`Warning: ${err}\n`);
+    process.stdout.write(prompt + '\n');
+  } else {
+    process.stderr.write('Prompt copied to clipboard.\n');
+  }
+} else {
+  process.stdout.write(prompt + '\n');
+}
 
 // --- Completion scripts ---
 

@@ -83,6 +83,20 @@ commitprompt --branch main --type feat --mode commit
 
 Valid types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`, `perf`
 
+### Copy to clipboard
+
+```bash
+# Copy the generated prompt directly to your clipboard
+commitprompt --copy
+commitprompt -c
+
+# Works with all other flags
+commitprompt --mode pr --branch main --copy
+commitprompt --diff changes.diff -c
+```
+
+On **macOS** this uses `pbcopy`. On **Linux** it tries `xclip` then `xsel`. On **Windows/WSL** it uses `clip.exe`. If no clipboard tool is found, the prompt is printed to stdout as a fallback with a warning on stderr.
+
 ### Shell autocomplete
 
 ```bash
@@ -132,6 +146,7 @@ If the change is complex, add a body paragraph explaining WHY (not WHAT).
 | `--type <type>` | Override auto-detected change type | - |
 | `--context` | Include repo context (package.json name, README intro) in prompt | - |
 | `--completions <bash\|zsh>` | Print shell completion script and exit | - |
+| `-c, --copy` | Copy the generated prompt to the system clipboard | - |
 
 **Input priority:** `--diff` > `--branch` > stdin pipe > `--staged` (default)
 
