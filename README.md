@@ -51,6 +51,48 @@ commitprompt --diff path/to/change.diff
 commitprompt --diff path/to/change.diff --mode pr
 ```
 
+### Read diff from stdin (pipe mode)
+
+If stdin is not a TTY, `commitprompt` reads the diff from it automatically:
+
+```bash
+git diff HEAD~1 | commitprompt
+git diff main...HEAD | commitprompt --mode pr
+cat my-changes.diff | commitprompt --mode changelog
+```
+
+### Compare against a branch
+
+```bash
+# Show everything your current branch added relative to main
+commitprompt --branch main
+
+# Short alias
+commitprompt -b develop --mode pr
+```
+
+### Override the detected change type
+
+```bash
+# Force the type to "fix" regardless of what the heuristic detects
+commitprompt --type fix
+
+# Combine with other flags
+commitprompt --branch main --type feat --mode commit
+```
+
+Valid types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`, `perf`
+
+### Shell autocomplete
+
+```bash
+# Bash - add to ~/.bashrc
+eval "$(commitprompt --completions bash)"
+
+# Zsh - add to ~/.zshrc
+eval "$(commitprompt --completions zsh)"
+```
+
 ## How it works
 
 1. **Reads** your staged diff (via `git diff --staged`) or a diff file
@@ -86,7 +128,12 @@ If the change is complex, add a body paragraph explaining WHY (not WHAT).
 | `--mode <commit\|pr\|changelog>` | Output format | `commit` |
 | `--diff <path>` | Read diff from file instead of git | - |
 | `--staged` | Explicit staged diff (same as default) | - |
+| `-b, --branch <name>` | Compare current branch against `<name>` | - |
+| `--type <type>` | Override auto-detected change type | - |
 | `--context` | Include repo context (package.json name, README intro) in prompt | - |
+| `--completions <bash\|zsh>` | Print shell completion script and exit | - |
+
+**Input priority:** `--diff` > `--branch` > stdin pipe > `--staged` (default)
 
 ## CI support
 
