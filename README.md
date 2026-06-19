@@ -1,5 +1,7 @@
 ﻿# commitprompt
 
+> **Archived and no longer maintained.** This project is no longer actively developed and has been archived. It is provided as-is under the MIT License. Feel free to fork and use it.
+
 Turn your `git diff --staged` into a ready-to-paste AI prompt for commit messages, PR descriptions, and changelogs.
 
 ## Installation

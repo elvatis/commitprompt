@@ -28,7 +28,7 @@
     "dx"
   ],
   "author": "elvatis",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/elvatis/commitprompt.git"
